@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>O Gabinete do Mistério</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Special+Elite&family=Courier+Prime:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #14100a;
+  --paper: #f6edd8;
+  --aged: #ecdfc0;
+  --sepia: #7a5c10;
+  --red: #b83025;
+  --green: #2a5a20;
+  --stamp: #7a1a1a;
+  --faint: #b89840;
+  --shadow: rgba(20,16,10,0.22);
+  --timer-full: #2a5a20;
+  --timer-mid: #b87010;
+  --timer-low: #b83025;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: #0e0b06;
+  font-family: 'Courier Prime', monospace;
+  color: var(--ink);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 12px 40px;
+  background-image:
+    radial-gradient(ellipse at 15% 40%, #1e1008 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 15%, #120808 0%, transparent 50%),
+    repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(255,255,255,0.008) 3px, rgba(255,255,255,0.008) 6px);
+}
+
+/* ── LAYOUT ── */
+.desk { width: 100%; max-width: 680px; }
+
+/* ── HEADER ── */
+.bureau-header { text-align: center; padding: 24px 10px 18px; }
+.bureau-name {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 8vw, 3.4rem);
+  color: var(--paper);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1;
+  text-shadow: 0 2px 24px rgba(180,140,40,0.35);
+}
+.bureau-sub {
+  font-family: 'Special Elite', cursive;
+  color: var(--faint);
+  font-size: clamp(0.6rem, 2.5vw, 0.72rem);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+.divider {
+  display: flex; align-items: center; gap: 10px;
+  margin: 8px 0; color: var(--faint);
+  font-size: 0.65rem; letter-spacing: 0.3em;
+}
+.divider::before, .divider::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(to right, transparent, var(--faint), transparent);
+}
+
+/* ── LANG TOGGLE ── */
+.lang-btn {
+  position: absolute; top: 18px; right: 16px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(180,140,40,0.3);
+  color: var(--faint);
+  font-family: 'Special Elite', cursive;
+  font-size: 0.65rem; letter-spacing: 0.2em;
+  padding: 5px 10px; cursor: pointer;
+  transition: all 0.2s; border-radius: 2px;
+}
+.lang-btn:hover { background: rgba(180,140,40,0.15); }
+
+/* ── DOSSIER CARD ── */
+.dossier {
+  background: var(--paper);
+  padding: clamp(20px, 5vw, 32px) clamp(18px, 5vw, 36px);
+  position: relative;
+  box-shadow: 0 4px 8px var(--shadow), 0 16px 48px rgba(0,0,0,0.55),
+    inset 0 0 80px rgba(160,120,40,0.06);
+  background-image: repeating-linear-gradient(
+    transparent, transparent 27px,
+    rgba(120,90,20,0.06) 27px, rgba(120,90,20,0.06) 28px
+  );
+  animation: dossierIn 0.4s ease both;
+}
+@keyframes dossierIn {
+  from { opacity:0; transform: translateY(12px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+/* ── STAMP ── */
+.stamp {
+  position: absolute; top: 18px; right: 20px;
+  border: 2.5px solid var(--stamp);
+  color: var(--stamp);
+  font-family: 'Special Elite', cursive;
+  font-size: 0.6rem; letter-spacing: 0.2em;
+  text-transform: uppercase; padding: 4px 8px;
+  transform: rotate(7deg); opacity: 0.65;
+}
+
+/* ── META ── */
+.file-meta {
+  font-family: 'Special Elite', cursive;
+  font-size: 0.62rem; color: var(--sepia);
+  letter-spacing: 0.12em; margin-bottom: 16px; opacity: 0.8;
+}
+
+/* ── SECTION LABEL ── */
+.section-label {
+  font-family: 'Special Elite', cursive;
+  font-size: 0.62rem; letter-spacing: 0.32em;
+  text-transform: uppercase; color: var(--sepia);
+  border-bottom: 1px solid var(--faint);
+  padding-bottom: 4px; margin: 20px 0 12px;
+}
+
+/* ── CRIME TEXT ── */
+.crime-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.15rem, 4vw, 1.5rem);
+  font-weight: 700; color: var(--ink);
+  margin-bottom: 8px; line-height: 1.25;
+}
+.crime-text { font-size: 0.875rem; line-height: 1.75; color: #2a1e0e; }
+
+/* ── SUSPECTS ── */
+.suspects-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px; margin-top: 10px;
+}
+@media (min-width: 480px) {
+  .suspects-grid { grid-template-columns: repeat(4, 1fr); }
+}
+.suspect-card {
+  background: var(--aged); border: 1.5px solid var(--faint);
+  padding: 12px 10px; transition: transform 0.15s, box-shadow 0.15s;
+  cursor: default;
+}
+.suspect-card.highlighted {
+  border-color: var(--red);
+  box-shadow: 0 0 0 2px rgba(184,48,37,0.18);
+}
+.suspect-emoji { font-size: 1.7rem; display: block; margin-bottom: 5px; }
+.suspect-name { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 0.82rem; color: var(--ink); }
+.suspect-role { font-size: 0.68rem; color: var(--sepia); font-style: italic; margin-top: 2px; }
+.suspicion-row { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
+.meter-label { font-size: 0.56rem; letter-spacing: 0.08em; color: var(--sepia); text-transform: uppercase; width: 48px; flex-shrink: 0; }
+.meter-bar { flex: 1; height: 5px; background: rgba(120,90,20,0.18); border-radius: 2px; overflow: hidden; }
+.meter-fill { height: 100%; border-radius: 2px; background: linear-gradient(to right, var(--sepia), var(--red)); transition: width 0.7s cubic-bezier(0.34,1.56,0.64,1); }
+
+/* ── TIMER ── */
+.timer-row {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 14px;
+}
+.timer-arc-wrap { position: relative; width: 44px; height: 44px; flex-shrink: 0; }
+.timer-arc-wrap svg { transform: rotate(-90deg); }
+.timer-arc-bg { fill: none; stroke: rgba(120,90,20,0.18); stroke-width: 4; }
+.timer-arc-fg { fill: none; stroke-width: 4; stroke-linecap: round; transition: stroke-dashoffset 1s linear, stroke 0.5s; }
+.timer-num {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Special Elite', cursive; font-size: 0.85rem; color: var(--sepia);
+}
+.timer-label { font-family: 'Special Elite', cursive; font-size: 0.62rem; letter-spacing: 0.15em; color: var(--sepia); text-transform: uppercase; }
+
+/* ── HINTS ── */
+.hints-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.hint-btn {
+  background: var(--aged); border: 1.5px solid var(--faint);
+  padding: 7px 14px; cursor: pointer;
+  font-family: 'Special Elite', cursive; font-size: 0.7rem;
+  letter-spacing: 0.1em; color: var(--sepia);
+  transition: all 0.15s; white-space: nowrap;
+}
+.hint-btn:hover:not(:disabled) { background: var(--paper); border-color: var(--sepia); }
+.hint-btn:disabled { opacity: 0.35; cursor: default; }
+.hints-left { font-family: 'Special Elite', cursive; font-size: 0.65rem; color: var(--sepia); letter-spacing: 0.1em; }
+.hint-box {
+  background: #fff8e8; border: 1px dashed var(--sepia);
+  padding: 10px 14px; margin-top: 10px;
+  font-size: 0.82rem; line-height: 1.55; color: #2a1e0e;
+  font-style: italic;
+  animation: fadeSlide 0.3s ease;
+}
+
+/* ── QUESTION ── */
+.question-box {
+  background: rgba(220,200,150,0.3); border-left: 3px solid var(--sepia);
+  padding: 14px 18px; margin-bottom: 14px;
+}
+.question-number { font-family: 'Special Elite', cursive; font-size: 0.62rem; letter-spacing: 0.25em; color: var(--sepia); text-transform: uppercase; margin-bottom: 5px; }
+.question-text { font-family: 'Playfair Display', serif; font-size: clamp(0.95rem, 3.5vw, 1.05rem); line-height: 1.5; color: var(--ink); }
+
+/* ── OPTIONS ── */
+.options-list { display: flex; flex-direction: column; gap: 9px; margin-top: 12px; }
+.option-btn {
+  background: var(--aged); border: 1.5px solid var(--faint);
+  padding: clamp(13px, 3.5vw, 15px) clamp(14px, 4vw, 18px);
+  text-align: left; cursor: pointer;
+  font-family: 'Courier Prime', monospace;
+  font-size: clamp(0.82rem, 3vw, 0.9rem);
+  color: var(--ink); transition: all 0.15s;
+  display: flex; gap: 12px; align-items: flex-start; line-height: 1.45;
+  min-height: 52px;
+}
+.option-btn:active:not(:disabled) { transform: scale(0.98); }
+.option-btn:hover:not(:disabled) { background: var(--paper); border-color: var(--sepia); transform: translateX(4px); }
+.option-btn:disabled { cursor: default; }
+.option-btn.correct { background: #e4f0de; border-color: var(--green); }
+.option-btn.wrong { background: #fce8e6; border-color: var(--red); }
+.option-btn.neutral-reveal { background: #fdf8ec; border-color: var(--faint); }
+.opt-letter { font-family: 'Special Elite', cursive; color: var(--sepia); font-size: 0.8rem; flex-shrink: 0; margin-top: 2px; }
+
+/* ── FEEDBACK ── */
+.feedback-bubble {
+  background: var(--ink); color: var(--paper);
+  padding: 14px 18px; margin-top: 14px;
+  font-size: 0.875rem; line-height: 1.65;
+  animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.feedback-bubble.correct-fb { background: #1e4018; }
+.feedback-bubble.wrong-fb { background: #4a1408; }
+.feedback-badge { font-family: 'Special Elite', cursive; font-size: 0.62rem; letter-spacing: 0.18em; opacity: 0.75; display: block; margin-bottom: 4px; text-transform: uppercase; }
+
+/* ── PROGRESS ── */
+.progress-outer { height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; margin-bottom: 18px; overflow: hidden; }
+.progress-inner { height: 100%; background: linear-gradient(to right, var(--sepia), var(--faint)); border-radius: 2px; transition: width 0.5s ease; }
+
+/* ── SCORE BAR ── */
+.score-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--aged); border: 1px solid var(--faint);
+  padding: 8px 14px; margin-bottom: 16px;
+  font-family: 'Special Elite', cursive; font-size: 0.68rem;
+  letter-spacing: 0.12em; color: var(--sepia);
+}
+
+/* ── NEXT BTN ── */
+.next-btn {
+  margin-top: 16px; background: var(--ink); color: var(--paper);
+  border: none; padding: 15px 28px;
+  font-family: 'Special Elite', cursive;
+  font-size: clamp(0.75rem, 3vw, 0.82rem); letter-spacing: 0.22em;
+  text-transform: uppercase; cursor: pointer;
+  transition: all 0.2s; display: block; width: 100%;
+  min-height: 52px;
+}
+.next-btn:hover { background: #2a1a08; letter-spacing: 0.32em; }
+.next-btn:active { transform: scale(0.98); }
+
+/* ── CLUE LOG ── */
+.clue-log { max-height: 150px; overflow-y: auto; margin-top: 8px; }
+.clue-entry {
+  display: flex; gap: 8px; font-size: 0.78rem; color: #2a1e0e;
+  padding: 5px 0; border-bottom: 1px dashed rgba(120,90,20,0.18);
+  line-height: 1.4; animation: fadeSlide 0.35s ease;
+}
+@keyframes fadeSlide { from { opacity:0; transform: translateX(-8px); } to { opacity:1; transform: translateX(0); } }
+.clue-icon { flex-shrink: 0; }
+.clue-text { font-style: italic; }
+
+/* ── START SCREEN ── */
+.start-screen { text-align: center; padding: 16px 0 8px; }
+.start-btn {
+  background: var(--ink); color: var(--paper);
+  border: 2px solid var(--faint);
+  padding: clamp(14px,4vw,18px) clamp(28px,8vw,44px);
+  font-family: 'Special Elite', cursive;
+  font-size: clamp(0.85rem, 3.5vw, 1rem); letter-spacing: 0.28em;
+  text-transform: uppercase; cursor: pointer; transition: all 0.25s;
+  margin-top: 18px; display: inline-block; min-height: 56px;
+}
+.start-btn:hover { background: var(--sepia); border-color: var(--paper); }
+.start-btn:active { transform: scale(0.97); }
+
+/* ── DIFFICULTY ── */
+.difficulty-row { display: flex; gap: 8px; margin: 14px 0 6px; flex-wrap: wrap; }
+.diff-btn {
+  flex: 1; min-width: 80px;
+  padding: 10px 8px; text-align: center; cursor: pointer;
+  font-family: 'Special Elite', cursive; font-size: 0.7rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  background: var(--aged); border: 1.5px solid var(--faint);
+  color: var(--sepia); transition: all 0.15s;
+}
+.diff-btn.selected { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.diff-btn:hover:not(.selected) { background: var(--paper); }
+
+/* ── API KEY SCREEN ── */
+.api-section { margin-top: 18px; }
+.api-input-row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.api-input {
+  flex: 1; min-width: 180px;
+  background: var(--aged); border: 1.5px solid var(--faint);
+  padding: 12px 14px; font-family: 'Courier Prime', monospace;
+  font-size: 0.8rem; color: var(--ink); outline: none;
+}
+.api-input:focus { border-color: var(--sepia); }
+.api-save-btn {
+  background: var(--sepia); color: var(--paper); border: none;
+  padding: 12px 20px; font-family: 'Special Elite', cursive;
+  font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+}
+.api-save-btn:hover { background: var(--ink); }
+.api-note { font-size: 0.72rem; color: var(--sepia); margin-top: 8px; line-height: 1.55; font-style: italic; }
+.api-ok { color: var(--green); font-family: 'Special Elite', cursive; font-size: 0.72rem; letter-spacing: 0.1em; margin-top: 6px; }
+.api-toggle { background: none; border: none; cursor: pointer; color: var(--sepia); font-size: 0.75rem; font-family: 'Courier Prime', monospace; text-decoration: underline; padding: 0; }
+
+/* ── LOADING ── */
+.loading-area { text-align: center; padding: 44px 20px; color: var(--sepia); font-family: 'Special Elite', cursive; font-size: 0.82rem; letter-spacing: 0.18em; }
+.loading-dots::after { content: ''; animation: dots 1.4s infinite; }
+@keyframes dots { 0%{content:'.'} 33%{content:'..'} 66%{content:'...'} }
+.loading-spinner { font-size: 2rem; display: block; margin-bottom: 14px; animation: spin 2s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── REVEAL ── */
+.reveal-section { text-align: center; padding: 8px 0 16px; }
+.verdict-stamp {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.3rem, 6vw, 1.8rem); font-weight: 700;
+  color: var(--stamp); border: 3.5px solid var(--stamp);
+  display: inline-block; padding: 8px 18px;
+  transform: rotate(-3deg); margin: 8px 0 16px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.verdict-stamp.solved { color: var(--green); border-color: var(--green); }
+.score-pills { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 12px 0; }
+.score-pill { background: var(--aged); border: 1px solid var(--faint); padding: 6px 14px; font-family: 'Special Elite', cursive; font-size: 0.7rem; letter-spacing: 0.12em; color: var(--sepia); }
+.twist-box { background: var(--ink); color: var(--paper); padding: 18px; margin-top: 16px; text-align: left; }
+.twist-label { font-family: 'Special Elite', cursive; font-size: 0.62rem; letter-spacing: 0.35em; color: var(--faint); text-transform: uppercase; margin-bottom: 8px; display: block; }
+.twist-text { font-size: 0.875rem; line-height: 1.7; font-style: italic; }
+.play-again-btn {
+  background: transparent; color: var(--sepia);
+  border: 1.5px solid var(--faint); padding: 14px 28px;
+  font-family: 'Special Elite', cursive; font-size: 0.78rem;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.2s; margin-top: 16px; width: 100%; min-height: 52px;
+}
+.play-again-btn:hover { background: var(--aged); }
+
+/* ── ANIMATIONS ── */
+@keyframes popIn { from{opacity:0;transform:scale(0.94)} to{opacity:1;transform:scale(1)} }
+
+/* ── SCROLLBAR ── */
+.clue-log::-webkit-scrollbar { width: 4px; }
+.clue-log::-webkit-scrollbar-track { background: var(--aged); }
+.clue-log::-webkit-scrollbar-thumb { background: var(--faint); }
+</style>
+</head>
+<body>
+
+<div class="desk">
+  <div class="bureau-header" style="position:relative">
+    <button class="lang-btn" onclick="toggleLang()" id="langBtn">EN</button>
+    <div class="bureau-name" id="headerTitle">O Gabinete do Mistério</div>
+    <div class="divider" id="headerDivider">— arquivos de casos —</div>
+    <div class="bureau-sub" id="headerSub">Desvendando o peculiar desde 1922</div>
+  </div>
+
+  <div class="dossier" id="mainDossier">
+    <div id="appContent"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// TRANSLATIONS
+// ══════════════════════════════════════════════════════════
+const T = {
+  'pt': {
+    headerTitle: 'O Gabinete do Mistério',
+    headerDivider: '— arquivos de casos —',
+    headerSub: 'Desvendando o peculiar desde 1922',
+    langBtn: 'EN',
+    fileMeta: (n) => `PROCESSO Nº ${n} | GABINETE DE INCIDENTES PECULIARES`,
+    stampStart: 'Confidencial',
+    stampActive: 'Caso Ativo',
+    incomingReport: 'Relatório Recebido',
+    startTitle: 'Um crime muito curioso aguarda sua atenção, Detetive.',
+    startBody: 'Um novo caso pousou em sua mesa. Os fatos são torcidos, os suspeitos são suspeitos, e o culpado pensa que escapou impune.<br><br>Sua missão: siga as pistas, resista às falsas pistas e desmascare o perpetrador antes que ele desapareça na névoa da inocência.<br><br><em>Aviso justo: as coisas podem não ser o que parecem. E alguns suspeitos têm desculpas muito convincentes.</em>',
+    diffLabel: 'Nível de Dificuldade',
+    diffEasy: '🕵️ Fácil',
+    diffMedium: '🔍 Médio',
+    diffHard: '💀 Difícil',
+    apiSection: 'Chave de API (para hospedar externamente)',
+    apiPlaceholder: 'sk-ant-...',
+    apiSave: 'Salvar',
+    apiNote: 'Deixe em branco para jogar aqui no Claude.ai. Necessário apenas ao hospedar o arquivo em outro lugar (Netlify, etc.)',
+    apiOk: '✓ Chave salva',
+    openDossier: 'Abrir o Dossiê',
+    crimeSection: 'O Crime',
+    suspectsSection: 'Pessoas de Interesse',
+    suspicionLabel: 'Suspeita',
+    evidenceSection: 'Registro de Evidências',
+    interrogationSection: 'Interrogatório',
+    questionLabel: 'Pergunta',
+    timerLabel: 'Tempo',
+    hintsLeft: (n) => `${n} dica${n!==1?'s':''} restante${n!==1?'s':''}`,
+    useHint: '💡 Usar Dica',
+    hintLoading: 'Consultando o informante…',
+    correctBadge: '✓ Pista confirmada',
+    wrongBadge: '✗ Rastro falso',
+    nextLead: 'Próxima Pista →',
+    readVerdict: 'Ler o Veredicto →',
+    verdictSection: 'Veredicto Final',
+    caseSolved: 'Caso Resolvido',
+    caseCold: 'Caso sem Solução',
+    solvedMsg: (c,t) => `<strong>Trabalho brilhante, Detetive.</strong> Com ${c} de ${t} pistas corretas, você reuniu evidências suficientes para fechar o caso.`,
+    coldMsg: (c,t) => `<strong>O culpado escapa.</strong> Apenas ${c} de ${t} pistas foram corretas. Ele está rindo em algum lugar, provavelmente bebendo algo caro.`,
+    culpritSection: 'O Culpado',
+    culpritWas: 'O perpetrador foi:',
+    scoreCorrect: (c,t) => `🎯 ${c}/${t} pistas corretas`,
+    scoreBrilliant: '🏆 Status: Brilhante',
+    scoreCoffee: '🕵️ Status: Precisa de café',
+    twistLabel: '⚡ Reviravolta — Somente Para Seus Olhos',
+    fullEvidence: 'Registro de Evidências — Completo',
+    playAgain: 'Abrir Novo Dossiê',
+    loadingMsgs: ['Subornando as testemunhas…','Coletando impressões digitais…','Interrogando o gato…','Revisando álibi suspeito…','Consultando o arquivo de evidências…'],
+    telegramDead: 'A linha telegráfica do Gabinete caiu.',
+    tryAgain: 'Tentar Novamente',
+    timeUp: '⏱ Tempo esgotado! A resposta foi revelada.',
+    questionOf: (c,t) => `PERGUNTA ${c} DE ${t}`,
+    diffMediumPrompt: 'algumas pistas são ambíguas',
+    diffHardPrompt: 'pistas enganosas, muito difícil',
+    diffEasyPrompt: 'pistas claras, para iniciantes',
+    promptLocale: 'pt-BR',
+  },
+  'en': {
+    headerTitle: 'The Mystery Bureau',
+    headerDivider: '— case files —',
+    headerSub: 'Solving the peculiar since 1922',
+    langBtn: 'PT',
+    fileMeta: (n) => `FILE NO. ${n} | BUREAU OF PECULIAR INCIDENTS`,
+    stampStart: 'Confidential',
+    stampActive: 'Active Case',
+    incomingReport: 'Incoming Report',
+    startTitle: 'A crime most curious awaits your attention, Detective.',
+    startBody: 'A new case has landed on your desk. The facts are twisted, the suspects are suspicious, and the culprit thinks they\'ve gotten away with it.<br><br>Your mission: follow the clues, resist the red herrings, and unmask the perpetrator before they disappear into the fog of innocence.<br><br><em>Fair warning: things may not be what they seem. And some suspects have very convincing excuses.</em>',
+    diffLabel: 'Difficulty Level',
+    diffEasy: '🕵️ Easy',
+    diffMedium: '🔍 Medium',
+    diffHard: '💀 Hard',
+    apiSection: 'API Key (for external hosting)',
+    apiPlaceholder: 'sk-ant-...',
+    apiSave: 'Save',
+    apiNote: 'Leave blank to play here on Claude.ai. Only needed when hosting the file elsewhere (Netlify, etc.)',
+    apiOk: '✓ Key saved',
+    openDossier: 'Open the Dossier',
+    crimeSection: 'The Crime',
+    suspectsSection: 'Persons of Interest',
+    suspicionLabel: 'Suspicion',
+    evidenceSection: 'Evidence Log',
+    interrogationSection: 'Interrogation',
+    questionLabel: 'Question',
+    timerLabel: 'Time',
+    hintsLeft: (n) => `${n} hint${n!==1?'s':''} left`,
+    useHint: '💡 Use Hint',
+    hintLoading: 'Consulting the informant…',
+    correctBadge: '✓ Lead confirmed',
+    wrongBadge: '✗ False trail',
+    nextLead: 'Next Lead →',
+    readVerdict: 'Read the Verdict →',
+    verdictSection: 'Final Verdict',
+    caseSolved: 'Case Solved',
+    caseCold: 'Case Cold',
+    solvedMsg: (c,t) => `<strong>Brilliant work, Detective.</strong> With ${c} out of ${t} correct leads, you've assembled enough evidence to make the case stick.`,
+    coldMsg: (c,t) => `<strong>The culprit slips away.</strong> Only ${c} out of ${t} leads checked out. They're laughing somewhere, probably sipping something expensive.`,
+    culpritSection: 'The Culprit',
+    culpritWas: 'The perpetrator was:',
+    scoreCorrect: (c,t) => `🎯 ${c}/${t} correct leads`,
+    scoreBrilliant: '🏆 Detective status: Brilliant',
+    scoreCoffee: '🕵️ Detective status: Needs coffee',
+    twistLabel: '⚡ Plot Twist — Eyes Only',
+    fullEvidence: 'Evidence Log — Full Record',
+    playAgain: 'Open a New Case File',
+    loadingMsgs: ['Bribing the witnesses…','Dusting for fingerprints…','Interrogating the cat…','Reviewing suspicious alibis…','Consulting the evidence locker…'],
+    telegramDead: 'The Bureau\'s telegraph line went dead.',
+    tryAgain: 'Try Again',
+    timeUp: '⏱ Time\'s up! The answer has been revealed.',
+    questionOf: (c,t) => `QUESTION ${c} OF ${t}`,
+    diffMediumPrompt: 'some clues are ambiguous',
+    diffHardPrompt: 'misleading clues, very hard',
+    diffEasyPrompt: 'clear clues, beginner-friendly',
+    promptLocale: 'en-US',
+  }
+};
+
+// ══════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════
+const state = {
+  lang: 'pt',
+  phase: 'start',
+  caseData: null,
+  questions: [],
+  currentQ: 0,
+  answered: false,
+  chosenIndex: null,
+  clues: [],
+  suspicion: {},
+  correctCount: 0,
+  totalQ: 5,
+  fileNo: rnd(1000,9999),
+  difficulty: 'medium',
+  hintsLeft: 3,
+  hintText: null,
+  hintLoading: false,
+  apiKey: '',
+  apiKeySaved: false,
+  showApiInput: false,
+  timerSecs: 30,
+  timerMax: 30,
+  timerInterval: null,
+  timerExpired: false,
+};
+
+function t(key, ...args) {
+  const val = T[state.lang][key];
+  return typeof val === 'function' ? val(...args) : val;
+}
+function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+
+// ══════════════════════════════════════════════════════════
+// HEADER SYNC
+// ══════════════════════════════════════════════════════════
+function syncHeader() {
+  document.getElementById('headerTitle').textContent = t('headerTitle');
+  document.getElementById('headerDivider').textContent = t('headerDivider');
+  document.getElementById('headerSub').textContent = t('headerSub');
+  document.getElementById('langBtn').textContent = t('langBtn');
+  document.title = t('headerTitle');
+  document.documentElement.lang = state.lang === 'pt' ? 'pt-BR' : 'en';
+}
+function toggleLang() {
+  state.lang = state.lang === 'pt' ? 'en' : 'pt';
+  syncHeader();
+  render();
+}
+
+// ══════════════════════════════════════════════════════════
+// TIMER
+// ══════════════════════════════════════════════════════════
+function timerSecsForDiff() { return {easy:45, medium:30, hard:20}[state.difficulty]; }
+
+function startTimer() {
+  clearInterval(state.timerInterval);
+  state.timerSecs = timerSecsForDiff();
+  state.timerMax  = state.timerSecs;
+  state.timerExpired = false;
+  state.timerInterval = setInterval(() => {
+    state.timerSecs--;
+    updateTimerUI();
+    if (state.timerSecs <= 0) {
+      clearInterval(state.timerInterval);
+      state.timerExpired = true;
+      if (!state.answered) autoRevealTimer();
+    }
+  }, 1000);
+}
+
+function stopTimer() { clearInterval(state.timerInterval); }
+
+function updateTimerUI() {
+  const arc = document.getElementById('timerArc');
+  const num = document.getElementById('timerNum');
+  if (!arc || !num) return;
+  const r = 18, circ = 2 * Math.PI * r;
+  const pct = state.timerSecs / state.timerMax;
+  arc.style.strokeDasharray = circ;
+  arc.style.strokeDashoffset = circ * (1 - pct);
+  const col = pct > 0.5 ? 'var(--timer-full)' : pct > 0.25 ? 'var(--timer-mid)' : 'var(--timer-low)';
+  arc.style.stroke = col;
+  num.textContent = Math.max(0, state.timerSecs);
+  num.style.color = col;
+}
+
+function autoRevealTimer() {
+  state.answered = true;
+  state.chosenIndex = -1; // none chosen
+  const q = state.questions[state.currentQ];
+  // treat as wrong
+  if (q.suspicionUpdates) {
+    q.suspicionUpdates.forEach(upd => {
+      const cur = state.suspicion[upd.name] || 0;
+      state.suspicion[upd.name] = Math.min(100, Math.max(0, cur + upd.onWrong));
+    });
+  }
+  state.clues.push({ icon: '⏱', text: t('timeUp') });
+  render();
+}
+
+// ══════════════════════════════════════════════════════════
+// RENDER ROUTER
+// ══════════════════════════════════════════════════════════
+function render() {
+  const el = document.getElementById('appContent');
+  if (state.phase === 'start')          el.innerHTML = renderStart();
+  else if (state.phase === 'loading')   el.innerHTML = renderLoading();
+  else if (state.phase === 'investigation') renderInvestigation(el);
+  else if (state.phase === 'reveal')    renderReveal(el);
+  if (state.phase === 'investigation' && !state.answered) updateTimerUI();
+}
+
+// ══════════════════════════════════════════════════════════
+// START
+// ══════════════════════════════════════════════════════════
+function renderStart() {
+  const diffs = [
+    {key:'easy', label: t('diffEasy')},
+    {key:'medium', label: t('diffMedium')},
+    {key:'hard', label: t('diffHard')},
+  ];
+  const apiKeyDisplay = state.apiKey ? '••••••••' + state.apiKey.slice(-4) : '';
+
+  return `
+    <div class="stamp">${t('stampStart')}</div>
+    <div class="file-meta">${t('fileMeta', state.fileNo)}</div>
+    <div class="section-label">${t('incomingReport')}</div>
+    <div class="crime-title" style="margin-bottom:12px">${t('startTitle')}</div>
+    <div class="crime-text">${t('startBody')}</div>
+
+    <div class="section-label">${t('diffLabel')}</div>
+    <div class="difficulty-row">
+      ${diffs.map(d => `<button class="diff-btn ${state.difficulty===d.key?'selected':''}" onclick="setDiff('${d.key}')">${d.label}</button>`).join('')}
+    </div>
+
+    <div class="section-label" style="margin-top:18px">${t('apiSection')}</div>
+    <div class="api-section">
+      <div class="api-input-row">
+        <input class="api-input" type="${state.showApiInput?'text':'password'}" id="apiKeyInput"
+          placeholder="${t('apiPlaceholder')}" value="${state.apiKey}"
+          oninput="state.apiKey=this.value">
+        <button class="api-save-btn" onclick="saveApiKey()">${t('apiSave')}</button>
+      </div>
+      <button class="api-toggle" onclick="state.showApiInput=!state.showApiInput;render()">${state.showApiInput?'🙈 Ocultar':'👁 Mostrar'}</button>
+      ${state.apiKeySaved ? `<div class="api-ok">${t('apiOk')}</div>` : ''}
+      <div class="api-note">${t('apiNote')}</div>
+    </div>
+
+    <div class="start-screen">
+      <button class="start-btn" onclick="startCase()">${t('openDossier')}</button>
+    </div>
+  `;
+}
+
+function setDiff(d) { state.difficulty = d; render(); }
+function saveApiKey() { state.apiKeySaved = !!state.apiKey; render(); }
+
+// ══════════════════════════════════════════════════════════
+// LOADING
+// ══════════════════════════════════════════════════════════
+function renderLoading() {
+  const msgs = t('loadingMsgs');
+  const msg = msgs[rnd(0, msgs.length-1)];
+  return `<div class="loading-area"><span class="loading-spinner">🔍</span>${msg}<span class="loading-dots"></span></div>`;
+}
+
+// ══════════════════════════════════════════════════════════
+// INVESTIGATION
+// ══════════════════════════════════════════════════════════
+function renderInvestigation(el) {
+  const { caseData, questions, currentQ, answered, clues, suspicion, hintsLeft, hintText, hintLoading } = state;
+  const q = questions[currentQ];
+  const progress = (currentQ / state.totalQ) * 100;
+  const r = 18, circ = 2 * Math.PI * r;
+  const pct = state.timerSecs / state.timerMax;
+
+  let html = `
+    <div class="stamp">${t('stampActive')}</div>
+    <div class="file-meta">${t('fileMeta', state.fileNo)}</div>
+    <div class="progress-outer"><div class="progress-inner" style="width:${progress}%"></div></div>
+
+    <div class="score-bar">
+      <span>🎯 ${state.correctCount}/${currentQ} ${state.lang==='pt'?'corretas':'correct'}</span>
+      <span>💡 ${hintsLeft} ${state.lang==='pt'?'dicas':'hints'}</span>
+      <span>${['🕵️','🔍','💀'][['easy','medium','hard'].indexOf(state.difficulty)]} ${['Fácil','Médio','Difícil'][['easy','medium','hard'].indexOf(state.difficulty)]}</span>
+    </div>
+
+    <div class="section-label">${t('crimeSection')}</div>
+    <div class="crime-title">${caseData.title}</div>
+    <div class="crime-text">${caseData.description}</div>
+
+    <div class="section-label">${t('suspectsSection')}</div>
+    <div class="suspects-grid">
+  `;
+
+  caseData.characters.forEach(c => {
+    const sus = suspicion[c.name] || 0;
+    html += `
+      <div class="suspect-card ${sus>=65?'highlighted':''}">
+        <span class="suspect-emoji">${c.emoji}</span>
+        <div class="suspect-name">${c.name}</div>
+        <div class="suspect-role">${c.role}</div>
+        <div class="suspicion-row">
+          <span class="meter-label">${t('suspicionLabel')}</span>
+          <div class="meter-bar"><div class="meter-fill" style="width:${sus}%"></div></div>
+        </div>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+
+  // Evidence log
+  if (clues.length > 0) {
+    html += `<div class="section-label">${t('evidenceSection')}</div><div class="clue-log">`;
+    clues.slice().reverse().forEach(c => {
+      html += `<div class="clue-entry"><span class="clue-icon">${c.icon}</span><span class="clue-text">${c.text}</span></div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Timer + hints row
+  html += `
+    <div class="section-label">${t('interrogationSection')}</div>
+    <div class="timer-row">
+      <div class="timer-arc-wrap">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle class="timer-arc-bg" cx="22" cy="22" r="${r}"/>
+          <circle class="timer-arc-fg" id="timerArc" cx="22" cy="22" r="${r}"
+            stroke-dasharray="${circ}" stroke-dashoffset="${circ*(1-pct)}"
+            stroke="var(--timer-full)"/>
+        </svg>
+        <div class="timer-num" id="timerNum">${state.timerSecs}</div>
+      </div>
+      <span class="timer-label">${t('timerLabel')}</span>
+      <div style="flex:1"></div>
+      <div class="hints-row">
+        <button class="hint-btn" onclick="useHint()" ${(hintsLeft<=0||answered||hintLoading)?'disabled':''}>${hintLoading?'…':t('useHint')}</button>
+        <span class="hints-left">${t('hintsLeft', hintsLeft)}</span>
+      </div>
+    </div>
+  `;
+
+  if (hintText) {
+    html += `<div class="hint-box">💡 ${hintText}</div>`;
+  }
+
+  // Question
+  html += `
+    <div class="question-box">
+      <div class="question-number">${t('questionOf', currentQ+1, state.totalQ)}</div>
+      <div class="question-text">${q.question}</div>
+    </div>
+    <div class="options-list">
+  `;
+
+  const letters = ['A','B','C'];
+  q.options.forEach((opt, i) => {
+    let cls = '';
+    if (answered) {
+      if (i === q.correctIndex) cls = 'correct';
+      else if (i === state.chosenIndex) cls = 'wrong';
+      else cls = 'neutral-reveal';
+    }
+    html += `
+      <button class="option-btn ${cls}" onclick="chooseOption(${i})" ${answered?'disabled':''}>
+        <span class="opt-letter">${letters[i]}.</span>
+        <span>${opt}</span>
+      </button>
+    `;
+  });
+
+  html += `</div>`;
+
+  // Feedback
+  if (answered && q.feedback) {
+    const correct = state.chosenIndex === q.correctIndex;
+    const fbCls = correct ? 'correct-fb' : 'wrong-fb';
+    const badge = correct ? t('correctBadge') : t('wrongBadge');
+    html += `<div class="feedback-bubble ${fbCls}"><span class="feedback-badge">${badge}</span>${q.feedback}</div>`;
+  }
+
+  // Next
+  if (answered) {
+    const isLast = currentQ >= state.totalQ - 1;
+    html += `<button class="next-btn" onclick="${isLast?'showReveal()':'nextQuestion()'}">${isLast?t('readVerdict'):t('nextLead')}</button>`;
+  }
+
+  el.innerHTML = html;
+  if (!answered) updateTimerUI();
+}
+
+// ══════════════════════════════════════════════════════════
+// REVEAL
+// ══════════════════════════════════════════════════════════
+function renderReveal(el) {
+  const { caseData, correctCount, totalQ } = state;
+  const solved = correctCount >= Math.ceil(totalQ * 0.6);
+  let html = `
+    <div class="file-meta">${t('fileMeta', state.fileNo)}</div>
+    <div class="section-label">${t('verdictSection')}</div>
+    <div class="reveal-section">
+      <div class="verdict-stamp ${solved?'solved':''}">${solved ? t('caseSolved') : t('caseCold')}</div>
+    </div>
+    <div class="crime-text">${solved ? t('solvedMsg',correctCount,totalQ) : t('coldMsg',correctCount,totalQ)}</div>
+    <div class="section-label">${t('culpritSection')}</div>
+    <div class="crime-text" style="margin-bottom:10px">${t('culpritWas')} <strong>${caseData.culprit}</strong> — ${caseData.culpritReason}</div>
+    <div class="score-pills">
+      <div class="score-pill">${t('scoreCorrect',correctCount,totalQ)}</div>
+      <div class="score-pill">${solved ? t('scoreBrilliant') : t('scoreCoffee')}</div>
+    </div>
+  `;
+
+  if (caseData.twist) {
+    html += `<div class="twist-box"><span class="twist-label">${t('twistLabel')}</span><div class="twist-text">${caseData.twist}</div></div>`;
+  }
+
+  html += `<div class="section-label" style="margin-top:22px">${t('fullEvidence')}</div><div class="clue-log" style="max-height:200px">`;
+  state.clues.slice().reverse().forEach(c => {
+    html += `<div class="clue-entry"><span class="clue-icon">${c.icon}</span><span class="clue-text">${c.text}</span></div>`;
+  });
+  html += `</div>`;
+  html += `<button class="play-again-btn" onclick="resetGame()">${t('playAgain')}</button>`;
+  el.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════════════════
+// ACTIONS
+// ══════════════════════════════════════════════════════════
+function chooseOption(index) {
+  if (state.answered) return;
+  stopTimer();
+  const q = state.questions[state.currentQ];
+  state.answered = true;
+  state.chosenIndex = index;
+  const correct = index === q.correctIndex;
+  if (correct) state.correctCount++;
+  if (q.suspicionUpdates) {
+    q.suspicionUpdates.forEach(upd => {
+      const cur = state.suspicion[upd.name] || 0;
+      state.suspicion[upd.name] = Math.min(100, Math.max(0, correct ? cur+upd.onCorrect : cur+upd.onWrong));
+    });
+  }
+  state.clues.push({ icon: correct?'🔍':'🚩', text: q.clueLog || (correct ? '✓' : '✗') });
+  state.hintText = null;
+  render();
+}
+
+function nextQuestion() {
+  state.currentQ++;
+  state.answered = false;
+  state.chosenIndex = null;
+  state.hintText = null;
+  state.hintLoading = false;
+  render();
+  startTimer();
+}
+
+function showReveal() {
+  stopTimer();
+  state.phase = 'reveal';
+  render();
+}
+
+async function useHint() {
+  if (state.hintsLeft <= 0 || state.answered || state.hintLoading) return;
+  state.hintsLeft--;
+  state.hintLoading = true;
+  render();
+
+  const q = state.questions[state.currentQ];
+  const hintPrompt = state.lang === 'pt'
+    ? `Você é o mestre do jogo. Dê uma dica curta (1 frase, máx 20 palavras) que ajude o jogador a responder esta pergunta sem revelar a resposta diretamente: "${q.question}" — A resposta correta é a opção ${q.correctIndex+1}. Seja sutil e divertido.`
+    : `You are the game master. Give a short hint (1 sentence, max 20 words) to help answer: "${q.question}" — The correct answer is option ${q.correctIndex+1}. Be subtle and fun.`;
+
+  try {
+    const headers = { 'Content-Type': 'application/json' };
+    if (state.apiKey) headers['x-api-key'] = state.apiKey;
+    const res = await fetch('/.netlify/functions/claude', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 80,
+        messages: [{ role: 'user', content: hintPrompt }]
+      })
+    });
+    const data = await res.json();
+    state.hintText = data.content.map(b => b.text||'').join('').trim();
+  } catch(e) {
+    state.hintText = state.lang==='pt' ? 'O informante está com medo de falar. Tente novamente.' : 'The informant is too scared to talk. Try again.';
+  }
+  state.hintLoading = false;
+  render();
+}
+
+function resetGame() {
+  stopTimer();
+  Object.assign(state, {
+    phase:'start', caseData:null, questions:[], currentQ:0,
+    answered:false, chosenIndex:null, clues:[], suspicion:{},
+    correctCount:0, totalQ:5, fileNo:rnd(1000,9999),
+    hintsLeft:3, hintText:null, hintLoading:false,
+    timerSecs:30, timerExpired:false
+  });
+  render();
+}
+
+// ══════════════════════════════════════════════════════════
+// START CASE — API CALL
+// ══════════════════════════════════════════════════════════
+async function startCase() {
+  state.phase = 'loading';
+  render();
+
+  const themes_pt = [
+    'o desaparecimento de um bolo lendário numa competição de confeitaria',
+    'o roubo de um anão de jardim premiado da associação do bairro',
+    'o sumiço misterioso da máquina de café do escritório numa segunda-feira',
+    'alguém que trocou todos os saleiros por açucareiros num restaurante chique',
+    'a sabotagem de um concurso de soletração na cidade',
+    'o roubo de um livro de biblioteca com 30 anos de atraso',
+    'o caso de uma isca de pesca da sorte roubada antes do torneio municipal',
+    'o desaparecimento do troféu do campeonato de xadrez escolar',
+    'alguém que substituiu todas as plantas do jardim comunitário por réplicas de plástico'
+  ];
+  const themes_en = [
+    'the disappearance of a legendary cake from a baking competition',
+    'the theft of a prized garden gnome from a neighborhood association',
+    'the mysterious vanishing of the office coffee machine on a Monday morning',
+    'someone swapping all the salt shakers with sugar at a fancy restaurant',
+    'the sabotage of a small-town spelling bee',
+    'the theft of a beloved library book that was 30 years overdue',
+    'the case of a stolen lucky fishing lure before the town tournament',
+    'the disappearance of the school chess championship trophy',
+    'someone replacing all community garden plants with plastic replicas'
+  ];
+
+  const themes = state.lang === 'pt' ? themes_pt : themes_en;
+  const theme = themes[rnd(0, themes.length-1)];
+  const diffNote = { easy: t('diffEasyPrompt'), medium: t('diffMediumPrompt'), hard: t('diffHardPrompt') }[state.difficulty];
+
+  const prompt = state.lang === 'pt'
+    ? `Você é o mestre do jogo de um jogo de mistério humorístico em português brasileiro. Gere um caso completo sobre: "${theme}". Dificuldade: ${state.difficulty} (${diffNote}).
+
+Retorne APENAS um objeto JSON válido com EXATAMENTE esta estrutura (sem markdown, sem texto extra):
+
+{
+  "title": "título chamativo do caso",
+  "description": "2-3 frases engraçadas descrevendo a cena do crime",
+  "characters": [
+    {"name": "Nome", "role": "papel/relação com a cena", "emoji": "emoji relevante"},
+    {"name": "Nome", "role": "papel", "emoji": "emoji"},
+    {"name": "Nome", "role": "papel", "emoji": "emoji"},
+    {"name": "Nome", "role": "papel", "emoji": "emoji"}
+  ],
+  "culprit": "Nome do culpado (deve ser um dos 4 personagens)",
+  "culpritReason": "1 frase engraçada explicando o motivo",
+  "twist": "Uma reviravolta surpreendente revelada no final — algo inesperado e engraçado",
+  "questions": [
+    {
+      "question": "pergunta de investigação sobre uma pista ou suspeito",
+      "options": ["opção A", "opção B", "opção C"],
+      "correctIndex": 0,
+      "feedback": "2 frases engraçadas explicando o que essa resposta significa para a investigação",
+      "clueLog": "nota curta de evidência (1 frase) para o arquivo do caso",
+      "suspicionUpdates": [
+        {"name": "NomePersonagem", "onCorrect": 15, "onWrong": -10},
+        {"name": "NomePersonagem", "onCorrect": -5, "onWrong": 20}
+      ]
+    }
+  ]
+}
+
+Requisitos: exatamente 4 personagens, exatamente 5 perguntas, 3 opções por pergunta, respostas erradas devem ser pistas falsas plausíveis, tom leve e divertido com humor absurdo suave, o culpado só deve ficar óbvio após a 4ª ou 5ª pergunta.`
+    : `You are the game master for a humorous crime-mystery game. Generate a complete mystery case about: "${theme}". Difficulty: ${state.difficulty} (${diffNote}).
+
+Return ONLY a valid JSON object with EXACTLY this structure (no markdown, no extra text):
+
+{
+  "title": "catchy case title",
+  "description": "2-3 sentence funny description of the crime scene",
+  "characters": [
+    {"name": "Name", "role": "their role/relationship", "emoji": "one emoji"},
+    {"name": "Name", "role": "role", "emoji": "emoji"},
+    {"name": "Name", "role": "role", "emoji": "emoji"},
+    {"name": "Name", "role": "role", "emoji": "emoji"}
+  ],
+  "culprit": "Name (must be one of the 4 characters)",
+  "culpritReason": "1-sentence funny explanation",
+  "twist": "A surprise plot twist — unexpected and funny",
+  "questions": [
+    {
+      "question": "investigation question",
+      "options": ["option A", "option B", "option C"],
+      "correctIndex": 0,
+      "feedback": "funny 2-sentence explanation of what this answer means",
+      "clueLog": "short 1-sentence evidence note",
+      "suspicionUpdates": [
+        {"name": "CharacterName", "onCorrect": 15, "onWrong": -10},
+        {"name": "CharacterName", "onCorrect": -5, "onWrong": 20}
+      ]
+    }
+  ]
+}
+
+Requirements: exactly 4 characters, exactly 5 questions, 3 options each, wrong answers are plausible red herrings, light absurd humor, culprit only obvious after Q4 or Q5.`;
+
+  try {
+    const headers = { 'Content-Type': 'application/json' };
+    if (state.apiKey) headers['x-api-key'] = state.apiKey;
+
+    const res = await fetch('/.netlify/functions/claude', {
+      method:'POST', headers,
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:2200,
+        messages:[{ role:'user', content:prompt }]
+      })
+    });
+
+    const data = await res.json();
+    const raw = data.content.map(b=>b.text||'').join('');
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(clean);
+
+    state.caseData = {
+      title: parsed.title, description: parsed.description,
+      characters: parsed.characters, culprit: parsed.culprit,
+      culpritReason: parsed.culpritReason, twist: parsed.twist
+    };
+    state.questions = parsed.questions;
+    state.totalQ = parsed.questions.length;
+    parsed.characters.forEach(c => { state.suspicion[c.name] = 10; });
+
+    state.phase = 'investigation';
+    render();
+    startTimer();
+
+  } catch(err) {
+    document.getElementById('appContent').innerHTML = `
+      <div class="loading-area">
+        ${t('telegramDead')}<br>
+        <small style="opacity:0.5;font-size:0.65rem">${err.message}</small><br><br>
+        <button class="start-btn" onclick="resetGame()">${t('tryAgain')}</button>
+      </div>`;
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════
+syncHeader();
+render();
+</script>
+</body>
+</html>
